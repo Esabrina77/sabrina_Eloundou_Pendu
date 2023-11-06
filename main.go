@@ -6,11 +6,26 @@ import (
 	"log"
 	"math/rand"
 	"os"
+	"os/exec"
+	"runtime"
 	"strings"
 	"time"
 )
 
+func clearTerminal() {
+	var cmd *exec.Cmd
+	if runtime.GOOS == "windows" {
+		cmd = exec.Command("cmd", "/c", "cls")
+
+	} else {
+		cmd = exec.Command("clear")
+	}
+	cmd.Stdout = os.Stdout
+	cmd.Run()
+}
+
 func main() {
+	clearTerminal()
 
 	//Ouverture du fichier
 	file, err := os.Open("mots.txt")
@@ -19,7 +34,7 @@ func main() {
 	}
 	defer file.Close()
 
-	// Lecture des mots du fichier
+	// Lecture des mots du dictionnaire
 	scanner := bufio.NewScanner(file)
 	var mots []string
 	for scanner.Scan() {
@@ -32,7 +47,26 @@ func main() {
 	// Initialisation du générateur de nombres aléatoires
 	rand.Seed(time.Now().UnixNano())
 
-	fmt.Println("Bienvenue dans Jeu du Pendu")
+	//nom du joueur
+	var nom string
+	for {
+
+		fmt.Println()
+		fmt.Println("**************Bienvenue dans Jeu du Pendu**********")
+		fmt.Println()
+		fmt.Println("************* VEUILLEZ ENTRER VOTRE NOM ***********")
+		fmt.Scanln(&nom)
+
+		if nom == "" {
+			fmt.Printf("*************  VEUILLEZ ENTRER VOTRE NOM!! ***********\n")
+			clearTerminal()
+			continue
+		} else {
+			break
+		}
+	}
+	clearTerminal()
+	fmt.Printf("Bienvenue Joueur %s: \n", nom)
 	fmt.Println("Choisissez un niveau de difficulté :")
 	fmt.Println("1. Facile")
 	fmt.Println("2. Moyen")
@@ -57,6 +91,7 @@ func main() {
 		fmt.Println("Choix invalide")
 		return
 	}
+	clearTerminal()
 
 	vie := 9
 	Score := 0
@@ -137,8 +172,8 @@ func main() {
 				lettresDevinees = make([]bool, len(mot))
 
 				fmt.Println()
-				fmt.Println("Félicitations! Vous avez deviné le mot:", mot)
-				Score += 10
+				fmt.Printf("Bien joué! joueur %s vous avez deviné le mot %s:", nom, mot)
+				Score += 5
 				fmt.Println()
 				fmt.Println("Votre score FINAL est :", Score)
 				return
@@ -155,7 +190,7 @@ func main() {
 
 		if motComplet(lettresDevinees) {
 			fmt.Println()
-			fmt.Println("Bien joué! vous avez deviné le mot:", mot)
+			fmt.Printf("Bien joué! joueur %s vous avez deviné le mot '%s':\n ", nom, mot)
 
 			break
 		}
@@ -168,9 +203,10 @@ func main() {
 		fmt.Println("Votre score actuel est :", Score)
 	}
 	fmt.Println("Votre score FINAL est :", Score)
-	fmt.Println()
+	clearTerminal()
 }
 
+// le
 func lettreDejaProposee(lettre string, lettresProposees map[string]bool) bool {
 	for k := range lettresProposees {
 		if strings.ContainsRune(k, []rune(lettre)[0]) {
@@ -180,6 +216,7 @@ func lettreDejaProposee(lettre string, lettresProposees map[string]bool) bool {
 	return false
 }
 
+// Sélection  d'un mot de façon aléatoire dans le dictionnaire(en fonction de la longueur du mot)
 func choisirMot(mots []string, minLen, maxLen int) string {
 	var motsFiltres []string
 	for _, mot := range mots {
@@ -197,10 +234,13 @@ func choisirMot(mots []string, minLen, maxLen int) string {
 	return motsFiltres[index]
 }
 
+// choisir une lettre aléatoire à afficher dans le mot excepté la première lettre
+// la premiere lettre du mot est marqué comme étant déjà deviné.
 func LettreAleatoires(mot []bool) {
 	mot[rand.Intn(len(mot)-2)+1] = true
 }
 
+// masquer les lettres non devinées du mot
 func afficherMot(mot string, lettresDevinees []bool) string {
 	var affichage string
 	for i, l := range mot {
@@ -213,6 +253,7 @@ func afficherMot(mot string, lettresDevinees []bool) string {
 	return affichage
 }
 
+// vérifier si le mot a été totalement trouvé par le joueur
 func motComplet(lettresDevinees []bool) bool {
 	for _, devinee := range lettresDevinees {
 		if !devinee {
@@ -222,6 +263,7 @@ func motComplet(lettresDevinees []bool) bool {
 	return true
 }
 
+// Afficher le bonhomme pendu
 func afficherPendu(pendu []string, vie int) {
 	if vie < len(pendu) {
 		fmt.Println(pendu[vie])
@@ -230,6 +272,7 @@ func afficherPendu(pendu []string, vie int) {
 	}
 }
 
+/*Les lettres déjà trouvées par le joueur sont stockées
 func mettreAJourLettresDevinees(mot, lettre string, lettresDevinees []bool) {
 	lettre = strings.ToLower(lettre)
 	for i, l := range mot {
@@ -238,3 +281,4 @@ func mettreAJourLettresDevinees(mot, lettre string, lettresDevinees []bool) {
 		}
 	}
 }
+*/
