@@ -65,6 +65,7 @@ func main() {
 			break
 		}
 	}
+
 	clearTerminal()
 	fmt.Printf("Bienvenue à toi %s! \n", nom)
 	fmt.Println("Choisissez un niveau de difficulté :")
@@ -72,7 +73,6 @@ func main() {
 	fmt.Println("2. Moyen")
 	fmt.Println("3. Difficile")
 	fmt.Println("4. GOLD LEVEL")
-
 	// Kaporal game- CHOIX
 
 	var choix int
@@ -206,8 +206,8 @@ func main() {
 	fmt.Println("Votre score FINAL est :", Score)
 }
 
-func lettreDejaProposee(lettre string, lettresProposees map[string]bool) bool {
-	for k := range lettresProposees {
+func lettreDejaProposee(lettre string, lettresproposees map[string]bool) bool {
+	for k := range lettresproposees {
 		if strings.ContainsRune(k, []rune(lettre)[0]) {
 			return true
 		}
