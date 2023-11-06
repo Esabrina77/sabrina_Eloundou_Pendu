@@ -52,9 +52,9 @@ func main() {
 	for {
 
 		fmt.Println()
-		fmt.Println("**************Bienvenue dans Jeu du Pendu**********")
+		fmt.Println("       **************Bienvenue dans Jeu du Pendu**********    ")
 		fmt.Println()
-		fmt.Println("************* VEUILLEZ ENTRER VOTRE NOM ***********")
+		fmt.Println("        ************* VEUILLEZ ENTRER VOTRE NOM **********      ")
 		fmt.Scanln(&nom)
 
 		if nom == "" {
@@ -66,7 +66,7 @@ func main() {
 		}
 	}
 	clearTerminal()
-	fmt.Printf("Bienvenue Joueur %s: \n", nom)
+	fmt.Printf("Bienvenue à toi %s! \n", nom)
 	fmt.Println("Choisissez un niveau de difficulté :")
 	fmt.Println("1. Facile")
 	fmt.Println("2. Moyen")
@@ -190,14 +190,15 @@ func main() {
 
 		if motComplet(lettresDevinees) {
 			fmt.Println()
-			fmt.Printf("Bien joué! joueur %s vous avez deviné le mot '%s':\n ", nom, mot)
+			fmt.Printf("Bien joué! %s vous avez deviné le mot '%s':\n ", nom, mot)
 
 			break
 		}
 
 		if vie == 0 {
 			fmt.Println()
-			fmt.Println("Vous avez perdu! Le mot était:", mot)
+			fmt.Printf("Désolé %s! vous avez perdu. Le mot était '%s':\n ", nom, mot)
+			fmt.Println("Votre score FINAL est :", Score)
 			return
 		}
 		fmt.Println("Votre score actuel est :", Score)
@@ -205,7 +206,6 @@ func main() {
 	fmt.Println("Votre score FINAL est :", Score)
 }
 
-// le
 func lettreDejaProposee(lettre string, lettresProposees map[string]bool) bool {
 	for k := range lettresProposees {
 		if strings.ContainsRune(k, []rune(lettre)[0]) {
@@ -270,14 +270,3 @@ func afficherPendu(pendu []string, vie int) {
 		fmt.Println(pendu[len(pendu)-1])
 	}
 }
-
-/*Les lettres déjà trouvées par le joueur sont stockées
-func mettreAJourLettresDevinees(mot, lettre string, lettresDevinees []bool) {
-	lettre = strings.ToLower(lettre)
-	for i, l := range mot {
-		if strings.ToLower(string(l)) == lettre {
-			lettresDevinees[i] = true
-		}
-	}
-}
-*/
