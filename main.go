@@ -203,7 +203,6 @@ func main() {
 		fmt.Println("Votre score actuel est :", Score)
 	}
 	fmt.Println("Votre score FINAL est :", Score)
-	clearTerminal()
 }
 
 // le
